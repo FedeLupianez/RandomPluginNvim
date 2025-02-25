@@ -1,1 +1,1 @@
-require("RandomPlugin").setup()
+require("RandomPlugin").setup({})
