@@ -9,7 +9,9 @@ M.options = {
 }
 
 function M.setup(opts)
-	M.options = vim.tbl_extend("force", opts or {})
+	if next(opts) ~= nil then
+		M.options = opts
+	end
 end
 
 return M
