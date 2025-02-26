@@ -14,41 +14,64 @@ function M.generateRandomString(lenght)
 	return str
 end
 
+function insert_random_string(tableI, length)
+	table.insert(tableI, M.generateRandomString(length))
+end
+
+function insert_random_number(tableI, min, max)
+	table.insert(tableI, M.generateRandomNumber(min, max))
+end
+
 function M.formatString(input, default_min, default_max, default_lenght)
 	local result = {}
 
 	for column in string.gmatch(input, "([^,]+)") do -- Separo las columnas
-		local key, value = string.match(column, "([^=]+)=([^=]+)")
+		-- Codigo para cuando son solo las letras
+		if column == "n" then
+			insert_random_number(result, default_min, default_max)
+			goto continue
+		elseif column == "s" then
+			insert_random_string(result, default_lenght)
+			goto continue
+		end
+
+		-- Cuando cada columna tiene un parámetro
+		local key, value = string.match(column, "([^=]+)=([^=]+)") -- Separo las key y los valores
 		if key == "s" then
-			local lenght = tonumber(value)
-			if lenght then
-				table.insert(result, M.generateRandomString(lenght))
-			else
-				table.insert(result, M.generateRandomString(default_lenght))
+			local length = tonumber(value)
+			if not length then
+				insert_random_string(result, default_lenght)
+				goto continue
 			end
+			insert_random_string(result, length)
 		elseif key == "n" then
 			local min_max_table = {}
 			local count = 0
 			for val in string.gmatch(value, "([^/]+)") do
 				local num = tonumber(val)
-				if num then
-					table.insert(min_max_table, tonumber(val))
-				else
+
+				if not num then
 					if count == 0 then
 						table.insert(min_max_table, default_min)
-						count = count + 1
+						count = 1
 					else
 						table.insert(min_max_table, default_max)
 						count = 0
 					end
+					goto continue
 				end
+				table.insert(min_max_table, tonumber(val))
+				::continue::
 			end
 
-			if #min_max_table == 2 then
-				local number = M.generateRandomNumber(min_max_table[1], min_max_table[2])
-				table.insert(result, number)
+			if #min_max_table ~= 2 then
+				table.insert(result, "error")
+				goto continue
 			end
+
+			insert_random_number(result, min_max_table[1], min_max_table[2])
 		end
+		::continue::
 	end
 	return table.concat(result, ",")
 end
