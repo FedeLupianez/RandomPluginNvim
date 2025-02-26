@@ -8,12 +8,18 @@ return {
   "FedeLupianez/RandomPluginNvim",
   -- En esta tabla se pueden cambiar los valor default
   opts = {
-    default = {
-      min_number = 1, -- Minimo para el random number
-      max_number = 999, -- Máximo para el random number
-      length_string = 14 -- Longitud de la cadena de texto
-    }
-  }
+    defaults = {
+      min_number = 1, -- Mínimo por default para el random number
+      max_number = 999, -- Máximo por default para el random number
+      length_string = 14, -- Longitud por default del random string
+    },
+
+    keymaps = {
+      random_number = "<leader>rn", -- Keymap para generar un número random
+      random_string = "<leader>rs", -- Keymap para generar un string random
+      random_format = "<leader>rf", -- Keymap para acceder al Random format
+    },
+	},
 
   config = function (opts)
     require("RandomPlugin").setup(opts)
@@ -31,6 +37,7 @@ return {
 > Los string generados son completamente al azar, así que no tendrán algún sentido.
 
 ### Keybinds :
+  ( Estos atajos son los que están configurados por defecto, si desea cambiarlos debe hacerlo en la tabla `opts` )
   - El atajo `<leader>rs` generará un string aleatorio con la longitud por default.
   - El atajo `<leader>rn` generará un numero aleatorio entre los valores min y max default.
   - El atajo `<leader>rf` es un atajo al comando _`RandomFormat`_  [Comandos](#Comandos)
@@ -46,20 +53,30 @@ return {
   
   - `RandomFormat`
     - Nos pedirá un input en el cual le vamos a tener que especificar el formato de la línea que queremos que genere.
-    ##### Las pautas a complir son : 
+    ##### Las pautas a complir son :
       - Separar cada columna por una *coma ( , )*
       - Especificar al comienzo de cada columna qué tipo de dato se desea en ella
-        - `n` --> Para un números
-        - `s` --> Para un string
+        - `n` ==> Para un números
+        - `s` ==> Para un string
+    
+    #### Sin argumentos :
+      Si no quiere utilizar argumentos, solo debe seguir las pautas anteriores y especificar si la columna es un numero o un string.
+      [!NOTE]
+      >Al no utilizar argumentos, plugin utilizará los valores por defecto para generar las columnas.
 
-      - _Número_ :
-        - Después de poner la `n`, se debe poner un signo igual ( = ) y después 
-          especificar el mínimo y el máximo que debe respetar el resultado separado por una barra ( / ).
-          - La línea para especificar un numero sería, por ejemplo, con 1 como mínimo y 100 como máximo ==> `n=1/100`
-      
-      - _String_ :
-        - Después de poner la `s`, se debe poner un signo igual ( = ) y después especificar la longitud de la cual queremos que la cadena sea.
-          - La línea para especificar un string sería, por ejemplo, con una longitud de 16 dígitos ==> `s=16`
+      _Ejemplo:_
+      `n,s,s,n` ==> `454,SKTA2Cn,NkzfmgL,381`
 
-    ##### Un ejemplo de una línea personalizada sería:
+
+    #### Con argumentos :
+    - _Número_ :
+      - Después de poner la `n`, se debe poner un signo igual ( = ) y después 
+        especificar el mínimo y el máximo que debe respetar el resultado separado por una barra ( / ).
+        - La línea para especificar un numero sería, por ejemplo, con 1 como mínimo y 100 como máximo ==> `n=1/100`
+    
+    - _String_ :
+      - Después de poner la `s`, se debe poner un signo igual ( = ) y después especificar la longitud de la cual queremos que la cadena sea.
+        - La línea para especificar un string sería, por ejemplo, con una longitud de 16 dígitos ==> `s=16`
+
+    ##### Un ejemplo de una línea con argumentos sería:
       `n=10/900,s=7,s=15,n=9/100` ==> `15,qaEhuFR,hHwQIojmajfAsCM,78`
